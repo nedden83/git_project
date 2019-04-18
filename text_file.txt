@@ -1,0 +1,51 @@
+Now, imagine the kernel is going to execute the code and it needs to know how to fetch the
+data from the global memory, process it, and store it back to some data store. Since we have
+chosen to use the local memory as a temporary data store, let's take a look at how local
+memory can be used to help our algorithm, and finally examine how it's processed.
+Local memory resembles a lot to any other memory in C, hence you need to initialize it to a
+proper state before you can use it. After this, you need to make sure that proper array indexing
+rules are obeyed since those one-off errors can crash your program and might hang your
+OpenCL device.At this point, I should caution you to put on your many-core hat now and imagine that 128
+threads are executing this kernel. With this understanding, you will realize that the entire
+local memory is set to zero by simple arithmetic. The important thing to realize by now,
+if you haven't, is that each work item should not perform any repeated action.
+Finally, let's attempt to understand how the values are fetched from global memory and stored
+in the scratchpad.
+When a work group begins executing, it will reach into global memory and fetch the contents
+of four values and stores them into a local variable and once that's done, the next four
+statements are executed by each work item to process each retrieved value using the
+component selection syntax, that is, value.s0, value.s1, value.s2, value.s3.
+The following illustration, provides how a work item can potentially access four rows of data on
+the scratchpad and update four elements in those rows by incrementing them. The important
+point to remember is that all elements in the scratchpad must be written before they can be
+processed, and hence this is the barrier.
+This type of programming technique where we build intermediate data structures so that
+we can obtain the eventual data structure is often called thread-based histograms in some
+circles. The technique is often employed when we know what the final data structure looks like
+and we use the same ADT to solve for smaller portions of data so that we can merge them in
+the end.If you analyze the memory access pattern, you will realize that what we have created an
+Abstract Data Type (ADT) known as the hash table where each row of data in the local
+memory represents the list of frequencies of the occurrence of a value between 0 and 255.
+With that understanding, we can come to the final part of solving this problem. Again, imagine
+that the work group has executed to this point, you have basically a hash table, and you want
+to merge all those other hash tables held in the local memories of the other work groups.
+To achieve this, we need to basically walk through the hash table, aggregate all the values for
+each row, and we would have our answer. However, now we only need one thread to perform
+all this, otherwise all 128 threads executing the walk would mean you're overcounting your
+values by 128 times! Therefore, to achieve this, we make use of the fact that each work item
+has a local ID in the work group, and we execute this code by selecting one particular work
+item only. The Sobel operator is a discrete differentiation operator, computing an approximation of the
+gradient of the image density function. The Sobel operator is based on convolving the image
+with a small, separable, and an integer-value filter in both horizontal and vertical directions.
+Thus, it is relatively inexpensive in terms of computations.
+Don't worry if you don't understand these notations right away, we are going to step through
+enough theory and math, and help you realize the application in OpenCL.
+Briefly, the Sobel filtering is a three-step process. Two 3 x 3 filters are applied separately
+and independently on every pixel and the idea is to use these two filters to approximate the
+derivatives of x and y, respectively. Using the results of these filters, we can finally approximate
+the magnitude of the gradient.
+The gradient computed by running Sobel's edge detector through each pixel (which also
+uses its neighboring eight pixels) will inform us whether there are changes in the vertical
+and horizontal axes (where the neighboring pixels reside).
+For those who are already familiar with the convolution theory, in general, may skip to the
+How to do it section of this recipe.
