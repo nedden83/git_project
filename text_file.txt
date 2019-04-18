@@ -52,7 +52,12 @@ For those who are already familiar with the convolution theory, in general, may 
 How to do it section of this recipe.
 
 
+git
 
+uses its neighboring eight pixels) will inform us whether there are changes in the vertical
 and horizontal axes (where the neighboring pixels reside).
 For those who are already familiar with the convolution theory, in general, may skip to the
 How to do it section of this recipe.
+
+
+git
