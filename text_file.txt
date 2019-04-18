@@ -25,6 +25,7 @@ circles. The technique is often employed when we know what the final data struct
 and we use the same ADT to solve for smaller portions of data so that we can merge them in
 the end.If you analyze the memory access pattern, you will realize that what we have created an
 Abstract Data Type (ADT) known as the hash table where each row of data in the local
+Abstract Data Type (ADT) known as the hash table where each row of data in the local
 memory represents the list of frequencies of the occurrence of a value between 0 and 255.
 With that understanding, we can come to the final part of solving this problem. Again, imagine
 that the work group has executed to this point, you have basically a hash table, and you want
