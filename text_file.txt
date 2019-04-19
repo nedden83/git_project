@@ -1,6 +1,8 @@
 master message
 new_branch3 message
 
+added new string
+
 
 
 
