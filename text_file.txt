@@ -1,4 +1,5 @@
 master message
+new_branch3 message
 
 
 
